@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "626597654911",
+    "project_id": "ormwalv8-borzan",
+    "storage_bucket": "ormwalv8-borzan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626597654911:android:3bcdc5c240040f6ed82a4a",
+        "android_client_info": {
+          "package_name": "hr.ferit.helenaborzan.lv6"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClXAIR7aDvQZphs8tQFulNSZBdwotvo94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
