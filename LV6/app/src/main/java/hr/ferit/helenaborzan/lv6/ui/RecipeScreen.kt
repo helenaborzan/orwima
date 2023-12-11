@@ -1,5 +1,6 @@
 package hr.ferit.helenaborzan.lv6.ui
 
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,22 +44,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.zad1.Recipe
 import hr.ferit.helenaborzan.lv6.NavigationController
 import hr.ferit.helenaborzan.lv6.R
 import hr.ferit.helenaborzan.lv6.Routes
-import hr.ferit.helenaborzan.lv6.data.recipes
+import hr.ferit.helenaborzan.lv6.data.RecipeViewModel
 import hr.ferit.helenaborzan.lv6.ui.theme.DarkGray
 import hr.ferit.helenaborzan.lv6.ui.theme.LightGray
 import hr.ferit.helenaborzan.lv6.ui.theme.Pink
 import hr.ferit.helenaborzan.lv6.ui.theme.White
+import androidx.activity.viewModels
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //@Preview(showBackground = true)
-fun RecipesScreen(navigation : NavController){
+fun RecipesScreen(viewModel: RecipeViewModel, navigation : NavController){
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,17 +71,12 @@ fun RecipesScreen(navigation : NavController){
             subtitle = "Good morning, Helena")
         SearchBar(iconResource = R.drawable.ic_search, labelText = "Search")
         RecipeCategories()
-        RecipeList(navigation=navigation, recipes = recipes )
+        RecipeList(viewModel = viewModel, navigation=navigation, recipes = viewModel.recipesData )
         Spacer(modifier = Modifier.size(12.dp))
         IconButton(iconResource = R.drawable.ic_plus, text = "Add new recipe"){}
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun ShowRecipeScreen(){
-    NavigationController()
-}
 
 @Composable
 fun ScreenTitle(
@@ -257,8 +255,8 @@ fun Chip(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeCard(
-    @DrawableRes imageResource : Int,
-    title : String,
+    imageResource: String,
+    title: String,
     onClick: () -> Unit
 ){
     Box(modifier = Modifier
@@ -269,7 +267,7 @@ fun RecipeCard(
             onClick = {onClick()}
         ){
             Image(
-                painter = painterResource(id = imageResource),
+                painter = rememberAsyncImagePainter(model = imageResource),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
@@ -297,6 +295,7 @@ fun RecipeCard(
 }
 @Composable
 fun RecipeList(
+    viewModel: RecipeViewModel,
     recipes: List<Recipe>,
     navigation: NavController
 ) {
@@ -327,10 +326,10 @@ fun RecipeList(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            items(recipes.size) {
+            items(viewModel.recipesData.size) {
                 RecipeCard(
-                    imageResource = recipes[it].imageResource,
-                    title = recipes[it].title
+                    imageResource = viewModel.recipesData[it].imageResource,
+                    title = viewModel.recipesData[it].title
                 ){
                     navigation.navigate(Routes.getRecipeDetailsPath(it))
                 }

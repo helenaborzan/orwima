@@ -49,10 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.zad1.Recipe
 import hr.ferit.helenaborzan.lv6.R
 import hr.ferit.helenaborzan.lv6.Routes
-import hr.ferit.helenaborzan.lv6.data.recipes
+import hr.ferit.helenaborzan.lv6.data.RecipeViewModel
 import hr.ferit.helenaborzan.lv6.ui.theme.DarkGray
 import hr.ferit.helenaborzan.lv6.ui.theme.Gray
 import hr.ferit.helenaborzan.lv6.ui.theme.Pink
@@ -62,7 +63,11 @@ import hr.ferit.helenaborzan.lv6.ui.theme.White
 
 @Composable
 //@Preview(showBackground = true)
-fun RecipeDetailsScreen(navigation : NavController, recipe: Recipe){
+fun RecipeDetailsScreen(
+    viewModel: RecipeViewModel,
+    navigation : NavController,
+    recipe: Recipe
+){
     val scrollState = rememberLazyListState()
     LazyColumn(
         verticalArrangement = Arrangement.Top,
@@ -72,7 +77,12 @@ fun RecipeDetailsScreen(navigation : NavController, recipe: Recipe){
             .fillMaxSize()
     ) {
         item {
-            TopImageAndBar(recipe.imageResource, navigation)
+            TopImageAndBar(
+                coverImage = recipe.imageResource,
+                viewModel = viewModel,
+                navigation = navigation,
+                recipe = recipe
+            )
             ScreenInfo(recipe.title, recipe.category)
             BasicInfo(recipe)
             Description(recipe)
@@ -86,22 +96,16 @@ fun RecipeDetailsScreen(navigation : NavController, recipe: Recipe){
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun showRecipeDetailsScreen(){
-    val navigation = rememberNavController()
-    RecipeDetailsScreen(navigation = navigation, recipe = recipes[0])
-}
 
 @Composable
 fun IngredientCard(
-    @DrawableRes iconResource : Int,
+    iconResource : String,
     title: String,
     subtitle: String
 ){
     Column {
         Image(
-            painter = painterResource(id = iconResource),
+            painter = rememberAsyncImagePainter(model = iconResource),
             contentDescription = title,
             modifier = Modifier
                 .fillMaxWidth()
@@ -160,8 +164,10 @@ fun CircularButton(
 
 @Composable
 fun TopImageAndBar(
-    @DrawableRes coverImage: Int,
-    navigation: NavController
+    coverImage: String,
+    viewModel: RecipeViewModel,
+    navigation: NavController,
+    recipe : Recipe
 ) {
     Box(
         modifier = Modifier
@@ -169,7 +175,7 @@ fun TopImageAndBar(
             .fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = coverImage),
+            painter = rememberAsyncImagePainter(model = coverImage),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
